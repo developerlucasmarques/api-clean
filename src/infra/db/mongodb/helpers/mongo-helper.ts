@@ -1,4 +1,5 @@
 import { Collection, MongoClient, MongoClientOptions } from 'mongodb';
+import { AccountModel } from '../../../../domain/models/account';
 
 export const MongoHelper = {
   client: null as MongoClient,
@@ -18,7 +19,7 @@ export const MongoHelper = {
     return this.client.db().collection(name);
   },
 
-  map(collection: any): any {
+  map(collection: any): AccountModel {
     // _id é desconstruído e armazenado numa variável homônima
     // 'accountWithoutId' é um objetos com todos os atributos de 'accountById', exceto o _id, que virou variável
     const { _id, ...collectionWithoutId } = collection;
