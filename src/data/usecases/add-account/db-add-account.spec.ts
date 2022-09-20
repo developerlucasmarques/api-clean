@@ -1,8 +1,8 @@
 import { AccountModel } from '../../../domain/models/account';
 import { AddAccountModel } from '../../../domain/usecases/add-account';
 import { DbAddAccount } from './db-add-account';
-import { AddAccountRepository } from './protocols/add-account-repository';
-import { Encrypter } from './protocols/encrypter';
+import { AddAccountRepository } from '../../protocols/add-account-repository';
+import { Encrypter } from '../../protocols/encrypter';
 
 const makeEncrypter = (): Encrypter => {
   class EncrypterStub implements Encrypter {
