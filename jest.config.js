@@ -3,7 +3,7 @@
  * https://jestjs.io/docs/configuration
  */
 
-export default {
+const config = {
   roots: ['<rootDir>/src'],
   collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
   coverageDirectory: 'coverage',
@@ -12,3 +12,5 @@ export default {
     '.+\\.ts$': 'ts-jest',
   },
 };
+
+module.exports = config
