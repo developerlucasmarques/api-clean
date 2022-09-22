@@ -8,6 +8,7 @@ import {
   badRequest,
   serverError,
   unauthorized,
+  ok,
 } from '../../helpers/http-helper';
 import { Controller, HttpRequest, HttpResponse } from '../../protocols';
 import { EmailValidator } from '../signup/signup-protocols';
@@ -38,6 +39,8 @@ export class LoginController implements Controller {
       if (!accessToken) {
         return unauthorized();
       }
+
+      return ok({ accessToken });
     } catch (error) {
       return serverError(error);
     }
