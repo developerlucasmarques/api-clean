@@ -61,6 +61,7 @@ const makeFakeRequest = (): HttpRequest => ({
     passwordConfirmation: 'any_password',
   },
 });
+
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
   name: 'valid_name',
