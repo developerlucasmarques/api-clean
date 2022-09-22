@@ -7,6 +7,8 @@ export class LoginController implements Controller {
   constructor(private readonly emailValidator: EmailValidator) {}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
+    const { email, password } = httpRequest.body;
+
     const requiredFields = ['email', 'password'];
     for (const field of requiredFields) {
       if (!httpRequest.body[field]) {
@@ -14,7 +16,7 @@ export class LoginController implements Controller {
       }
     }
 
-    const isValid = this.emailValidator.isValid(httpRequest.body.email);
+    const isValid = this.emailValidator.isValid(email);
     if (!isValid) {
       return badRequest(new InvalidParamError('email'));
     }
