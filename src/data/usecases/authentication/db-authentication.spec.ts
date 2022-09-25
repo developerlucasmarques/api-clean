@@ -131,7 +131,6 @@ describe('DbAuthentication UseCase', () => {
     expect(generateSpy).toHaveBeenCalledWith('any_id');
   });
 
-  
   test('Should throw if TokenGenerator throws', async () => {
     const { sut, tokenGeneratorStub } = makeSut();
     jest
@@ -142,4 +141,9 @@ describe('DbAuthentication UseCase', () => {
     await expect(promise).rejects.toThrow();
   });
 
+  test('Should call TokenGenerator with correct id', async () => {
+    const { sut } = makeSut();
+    const accessToken = await sut.auth(makeFakeAuthentication());
+    expect(accessToken).toBe('access_token');
+  });
 });
