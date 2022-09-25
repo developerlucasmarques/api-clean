@@ -1,4 +1,3 @@
-import { hash } from 'bcrypt';
 import { AccountModel } from '../../../domain/models/account';
 import { AuthenticationModel } from '../../../domain/usecases/authentication';
 import { HashComparer } from '../../protocols/criptography/hash-comparer';
@@ -46,7 +45,10 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository();
   const hashComparerStub = makeHashComparer();
-  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub);
+  const sut = new DbAuthentication(
+    loadAccountByEmailRepositoryStub,
+    hashComparerStub
+  );
   return {
     sut,
     loadAccountByEmailRepositoryStub,
@@ -68,7 +70,7 @@ describe('DbAuthentication UseCase', () => {
       .spyOn(loadAccountByEmailRepositoryStub, 'load')
       .mockReturnValueOnce(null);
     const accessToken = await sut.auth(makeFakeAuthentication());
-    expect(accessToken).toBe(null);
+    expect(accessToken).toBeNull()
   });
 
   test('Should throw if LoadAccountByEmailRepository throws', async () => {
@@ -98,4 +100,13 @@ describe('DbAuthentication UseCase', () => {
     await expect(promise).rejects.toThrow();
   });
 
+  test('Should return null if HashComparer returns false', async () => {
+    const { sut, hashComparerStub } = makeSut();
+    jest
+      .spyOn(hashComparerStub, 'comparer')
+      .mockReturnValueOnce(Promise.resolve(false));
+
+    const accessToken = await sut.auth(makeFakeAuthentication());
+    expect(accessToken).toBeNull()
+  });
 });
