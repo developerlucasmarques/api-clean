@@ -21,6 +21,8 @@ export class AccountMongoRepository
   async loadByEmail(email: string): Promise<AccountModel> {
     const accountCollection = await MongoHelper.getCollection('accounts');
     let account = await accountCollection.findOne({ email });
-    return MongoHelper.map(account);
+    if (account) {
+      return MongoHelper.map(account);
+    }
   }
 }
