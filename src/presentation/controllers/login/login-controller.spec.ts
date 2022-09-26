@@ -9,8 +9,8 @@ import {
   serverError,
   unauthorized,
 } from '../../helpers/http/http-helper';
-import { HttpRequest, Validation } from '../signup/signup-protocols';
-import { LoginController } from './login';
+import { HttpRequest, Validation } from '../signup/signup-controller-protocols';
+import { LoginController } from './login-controller';
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
