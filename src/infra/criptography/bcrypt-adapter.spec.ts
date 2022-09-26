@@ -47,13 +47,13 @@ describe('Bcrypt Adapter', () => {
   test('Should call compare with correct values', async () => {
     const sut = makeSut();
     const comapreSpy = jest.spyOn(bcrypt, 'compare');
-    await sut.comparer('any_value', 'any_hash');
+    await sut.compare('any_value', 'any_hash');
     expect(comapreSpy).toHaveBeenCalledWith('any_value', 'any_hash');
   });
 
   test('Should retrun true when compare succeeds', async () => {
     const sut = makeSut();
-    const isValid = await sut.comparer('any_value', 'any_hash');
+    const isValid = await sut.compare('any_value', 'any_hash');
     expect(isValid).toBe(true);
   });
 
@@ -65,7 +65,7 @@ describe('Bcrypt Adapter', () => {
     >;
     comapreSpy.mockReturnValueOnce(Promise.resolve(false));
 
-    const isValid = await sut.comparer('any_value', 'any_hash');
+    const isValid = await sut.compare('any_value', 'any_hash');
     expect(isValid).toBe(false);
   });
 
@@ -80,7 +80,7 @@ describe('Bcrypt Adapter', () => {
       new Promise((resolve, reject) => reject(new Error()))
     );
 
-    const promise = sut.comparer('any_value', 'any_hash');
+    const promise = sut.compare('any_value', 'any_hash');
     await expect(promise).rejects.toThrow();
   });
 });

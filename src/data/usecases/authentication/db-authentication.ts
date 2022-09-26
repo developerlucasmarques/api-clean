@@ -22,7 +22,7 @@ export class DbAuthentication implements Authentication {
       email
     );
     if (account) {
-      const isValid = await this.hashComparer.comparer(
+      const isValid = await this.hashComparer.compare(
         password,
         account.password
       );
