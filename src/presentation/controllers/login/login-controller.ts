@@ -1,3 +1,4 @@
+import { createImportSpecifier } from 'typescript';
 import { Authentication } from '../../../domain/usecases/authentication';
 import {
   badRequest,
@@ -26,7 +27,6 @@ export class LoginController implements Controller {
       if (!accessToken) {
         return unauthorized();
       }
-
       return ok({ accessToken });
     } catch (error) {
       return serverError(error);
