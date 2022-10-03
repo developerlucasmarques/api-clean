@@ -15,13 +15,13 @@ describe('Jwt Adapater', () => {
   test('Should call sign with correct values', async () => {
     const sut = makeSut();
     const signSpy = jest.spyOn(jwt, 'sign');
-    await sut.hash('any_id');
+    await sut.encrypt('any_id');
     expect(signSpy).toHaveBeenCalledWith({ id: 'any_id' }, 'secret');
   });
 
   test('Should return a token on sign succees', async () => {
     const sut = makeSut();
-    const accessToken = await sut.hash('any_id');
+    const accessToken = await sut.encrypt('any_id');
     expect(accessToken).toBe('any_token');
   });
 
@@ -31,7 +31,7 @@ describe('Jwt Adapater', () => {
       throw new Error();
     });
 
-    const promise = sut.hash('any_id');
+    const promise = sut.encrypt('any_id');
     expect(promise).rejects.toThrow();
   });
 });
