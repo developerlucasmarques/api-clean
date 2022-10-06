@@ -105,7 +105,7 @@ describe('SignUp Controller', () => {
     const { sut } = makeSut();
 
     const httpResponse = await sut.handle(makeFakeRequest());
-    expect(httpResponse).toEqual(created(makeFakeAccount()));
+    expect(httpResponse).toEqual(created({ accessToken: 'any_token' }));
   });
 
   test('Should call Validation with correct values', async () => {
@@ -136,5 +136,14 @@ describe('SignUp Controller', () => {
       email: 'any_email@mail.com',
       password: 'any_password',
     });
+  });
+
+  test('Should return 500 if Authentication throws', async () => {
+    const { sut, authenticationStub } = makeSut();
+    jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(async () => {
+      return Promise.reject(serverError(new Error()));
+    });
+    const httpResponse = await sut.handle(makeFakeRequest());
+    expect(httpResponse).toEqual(serverError(new Error()));
   });
 });
