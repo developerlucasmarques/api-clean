@@ -20,8 +20,8 @@ const makeAddAccount = (): AddAccount => {
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
-    validate(input: any): Error {
-      return null;
+    validate(input: any): Error | null {
+      return null
     }
   }
   return new ValidationStub();
@@ -108,8 +108,6 @@ describe('SignUp Controller', () => {
       .mockReturnValueOnce(new MissingParamError('any_field'));
 
     const httpResponse = await sut.handle(makeFakeRequest());
-    expect(httpResponse).toEqual(
-      badRequest(new MissingParamError('any_field'))
-    );
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')));
   });
 });

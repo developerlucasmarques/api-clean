@@ -14,7 +14,7 @@ import { LoginController } from './login-controller';
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
-    validate(input: any): Error {
+    validate(input: any): Error | null {
       return null;
     }
   }
@@ -64,7 +64,7 @@ describe('Login Controller', () => {
     const { sut, authenticationStub } = makeSut();
     jest
       .spyOn(authenticationStub, 'auth')
-      .mockReturnValueOnce(new Promise((resolve) => resolve(null)));
+      .mockReturnValueOnce(Promise.resolve(''));
 
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(unauthorized());
