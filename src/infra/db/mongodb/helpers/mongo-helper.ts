@@ -1,5 +1,5 @@
 import { Collection, MongoClient, MongoClientOptions } from 'mongodb';
-import { AccountModel } from '../../../../domain/models/account/account';
+import { AccountModel } from '../../../../domain/models/account/account-model';
 
 export const MongoHelper = {
   client: null as MongoClient,

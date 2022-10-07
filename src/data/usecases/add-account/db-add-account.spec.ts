@@ -1,4 +1,4 @@
-import { AccountModel } from '../../../domain/models/account/account';
+import { AccountModel } from '../../../domain/models/account/account-model';
 import { AddAccountModel } from '../../../domain/usecases/add-account';
 import { AddAccountRepository } from '../../protocols/db/account/add-account-repository';
 import { Hasher } from '../../protocols/criptography/hasher';

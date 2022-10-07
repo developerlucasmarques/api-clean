@@ -1,4 +1,4 @@
-import { AccountModel } from '../../../domain/models/account/account';
+import { AccountModel } from '../../../domain/models/account/account-model';
 import { AuthenticationModel } from '../../../domain/usecases/authentication';
 import { HashComparer } from '../../protocols/criptography/hash-comparer';
 import { Encrypter } from '../../protocols/criptography/encrypter';
