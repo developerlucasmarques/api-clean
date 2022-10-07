@@ -1,4 +1,4 @@
-import { left } from '../../either/either';
+import { left, rigth } from '../../either/either';
 import { InvalidNameError } from '../../errors/invalid-name';
 import { AccountName } from './account-name-value-objec';
 
@@ -21,5 +21,11 @@ describe('AccountName', () => {
     const response = AccountName.create('invalid2 name');
     const leftError = left(new InvalidNameError(`Account name must not contain numbers`));
     expect(response.value).toEqual(leftError.value);
+  });
+
+  test('Should return rigth name', () => {
+    const response = AccountName.create(' any_name  ');
+    console.log(response.value);
+    expect(response.value).toEqual({ name: 'any_name' });
   });
 });

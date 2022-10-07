@@ -1,7 +1,7 @@
 export type Either<L, R> = Left<L, R> | Rigth<L, R>;
 
 export class Left<L, R> {
-  constructor(public readonly value: L) {}
+  constructor(readonly value: L) {}
 
   isLeft(): this is Left<L, R> {
     return true;
@@ -12,7 +12,7 @@ export class Left<L, R> {
 }
 
 export class Rigth<L, R> {
-  constructor(public readonly value: R) {}
+  constructor(readonly value: R) {}
 
   isLeft(): this is Left<L, R> {
     return false;
@@ -23,9 +23,9 @@ export class Rigth<L, R> {
 }
 
 export const left = <L, R>(l: L): Either<L, R> => {
-  return new Left(l);
+  return new Left<L, R>(l);
 };
 
 export const rigth = <L, R>(r: R): Either<L, R> => {
-  return new Rigth(r);
+  return new Rigth<L, R>(r);
 };

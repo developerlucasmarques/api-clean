@@ -1,19 +1,18 @@
 import { Either, left, rigth } from '../../either/either';
 import { InvalidNameError } from '../../errors/invalid-name';
-import { ValueObject } from '../value-object';
 
-interface AccountNameProps {
-  name: string;
-}
 type NameResponse = Either<InvalidNameError, AccountName>;
 
-export class AccountName extends ValueObject<AccountNameProps> {
-  private constructor(props: AccountNameProps) {
-    super(props);
+export class AccountName {
+  private readonly name: string;
+
+  private constructor(name: string) {
+    this.name = name;
+    Object.freeze(this);
   }
 
   get value(): string {
-    return this.props.name;
+    return this.name;
   }
 
   public static create(name: string): NameResponse {
@@ -30,6 +29,6 @@ export class AccountName extends ValueObject<AccountNameProps> {
     if (containNumbersRegex.test(name)) {
       return left(new InvalidNameError(`Account name must not contain numbers`));
     }
-    return rigth(new AccountName({ name }));
+    return rigth(new AccountName(name));
   }
 }
