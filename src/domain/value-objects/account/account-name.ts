@@ -1,13 +1,10 @@
 import { Either, left, rigth } from '../../either/either';
 import { InvalidNameError } from '../../errors/invalid-name';
 
-type NameResponse = Either<InvalidNameError, AccountName>;
+type AccountNameResponse = Either<InvalidNameError, AccountName>;
 
 export class AccountName {
-  private readonly name: string;
-
-  private constructor(name: string) {
-    this.name = name;
+  private constructor(private readonly name: string) {
     Object.freeze(this);
   }
 
@@ -15,7 +12,7 @@ export class AccountName {
     return this.name;
   }
 
-  public static create(name: string): NameResponse {
+  public static create(name: string): AccountNameResponse {
     if (!name) {
       return left(new InvalidNameError(`Account name not informed`));
     }

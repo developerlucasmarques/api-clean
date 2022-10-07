@@ -1,6 +1,6 @@
-import { left, rigth } from '../../either/either';
+import { left } from '../../either/either';
 import { InvalidNameError } from '../../errors/invalid-name';
-import { AccountName } from './account-name-value-objec';
+import { AccountName } from './account-name';
 
 describe('AccountName', () => {
   test('Should return left with InvalidNameError if name is not provided', () => {
