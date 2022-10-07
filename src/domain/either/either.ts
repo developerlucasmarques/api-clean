@@ -3,10 +3,10 @@ export type Either<L, R> = Left<L, R> | Rigth<L, R>;
 export class Left<L, R> {
   constructor(public readonly value: L) {}
 
-  isLeft() {
+  isLeft(): this is Left<L, R> {
     return true;
   }
-  isRigth() {
+  isRigth(): this is Rigth<L, R> {
     return false;
   }
 }
@@ -14,10 +14,10 @@ export class Left<L, R> {
 export class Rigth<L, R> {
   constructor(public readonly value: R) {}
 
-  isLeft() {
+  isLeft(): this is Left<L, R> {
     return false;
   }
-  isRigth() {
+  isRigth(): this is Rigth<L, R> {
     return true;
   }
 }
