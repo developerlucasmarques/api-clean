@@ -23,9 +23,13 @@ describe('AccountName', () => {
     expect(response.value).toEqual(leftError.value);
   });
 
-  test('Should return rigth name', () => {
+  test('Should create name with no white spaces in edges', () => {
     const response = AccountName.create(' any_name  ');
-    console.log(response.value);
     expect(response.value).toEqual({ name: 'any_name' });
+  });
+
+  test('Should create name with if name passes validations', () => {
+    const response = AccountName.create('valid_name');
+    expect(response.value).toEqual({ name: 'valid_name' });
   });
 });
