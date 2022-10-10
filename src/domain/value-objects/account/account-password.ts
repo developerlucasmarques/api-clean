@@ -17,9 +17,9 @@ export class AccountPassword {
       return left(new InvalidPasswordError('Password not informed'));
     }
 
-    if (password.length < 8) {
+    if (password.length < 8 || password.length > 256) {
       return left(
-        new InvalidPasswordError('Password must contain at least 8 characters')
+        new InvalidPasswordError('Password must contain between 8 and 100 characters')
       );
     }
 
