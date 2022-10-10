@@ -12,7 +12,20 @@ describe('AccountPassword', () => {
   test('Should return left with InvalidPasswordError if password is less than 8 characters', () => {
     const response = AccountPassword.create('Any@');
     const leftError = left(
-      new InvalidPasswordError('Password must contain at least 8 characters')
+      new InvalidPasswordError('Password must contain between 8 and 100 characters')
+    );
+    expect(response.value).toEqual(leftError.value);
+  });
+
+  test('Should return left with InvalidPasswordError if password contains more than 256 characters', () => {
+    let password = '';
+    for (let i = 0; i <= 256; i++) {
+      password = password + 'a';
+    }
+    console.log(password);
+    const response = AccountPassword.create(password);
+    const leftError = left(
+      new InvalidPasswordError('Password must contain between 8 and 100 characters')
     );
     expect(response.value).toEqual(leftError.value);
   });
