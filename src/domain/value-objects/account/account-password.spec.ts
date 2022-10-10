@@ -22,7 +22,6 @@ describe('AccountPassword', () => {
     for (let i = 0; i <= 256; i++) {
       password = password + 'a';
     }
-    console.log(password);
     const response = AccountPassword.create(password);
     const leftError = left(
       new InvalidPasswordError('Password must contain between 8 and 100 characters')
