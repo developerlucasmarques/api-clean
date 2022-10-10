@@ -1,21 +1,17 @@
-import { EitherCombine, left } from '../../../shared/either/either';
+import { Either, EitherCombine, left, rigth } from '../../../shared/either/either';
 import { InvalidEmailError } from '../../errors/invalid-email';
 import { InvalidNameError } from '../../errors/invalid-name';
 import { InvalidPasswordError } from '../../errors/invalid-password';
 import { AddAccountModel } from '../../usecases/add-account';
-import {
-  AccountEmail,
-  AccountEmailResponse,
-} from '../../value-objects/account/account-email';
-import {
-  AccountName,
-  AccountNameResponse,
-} from '../../value-objects/account/account-name';
-import {
-  AccountPassword,
-  AccountPasswordResponse,
-} from '../../value-objects/account/account-password';
+import { AccountEmail } from '../../value-objects/account/account-email';
+import { AccountName } from '../../value-objects/account/account-name';
+import { AccountPassword } from '../../value-objects/account/account-password';
 import { UserDataProps } from './user-data-props';
+
+type AccountResponse = Either<
+  InvalidNameError | InvalidEmailError | InvalidPasswordError,
+  Account
+>;
 
 export class Account {
   name: AccountName;
@@ -26,13 +22,13 @@ export class Account {
     this.name = props.name;
     this.email = props.email;
     this.password = props.password;
+    Object.freeze(this);
   }
 
-  public static create(addAccountModel: AddAccountModel) {
-    const { name, email, password } = addAccountModel;
-    const nameOrError: AccountNameResponse = AccountName.create(name);
-    const emailOrError: AccountEmailResponse = AccountEmail.create(email);
-    const passwordOrError: AccountPasswordResponse = AccountPassword.create(password);
+  public static create(addAccountModel: AddAccountModel): AccountResponse {
+    const nameOrError = AccountName.create(addAccountModel.name);
+    const emailOrError = AccountEmail.create(addAccountModel.email);
+    const passwordOrError = AccountPassword.create(addAccountModel.password);
 
     const results = EitherCombine.validate<
       InvalidNameError | InvalidEmailError | InvalidPasswordError,
@@ -42,5 +38,11 @@ export class Account {
     if (results.isLeft()) {
       return left(results.value);
     }
+
+    const name: any = nameOrError.value;
+    const email: any = emailOrError.value;
+    const password: any = passwordOrError.value;
+
+    return rigth(new Account({ name, email, password }));
   }
 }
