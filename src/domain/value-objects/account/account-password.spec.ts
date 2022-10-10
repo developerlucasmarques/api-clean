@@ -29,10 +29,14 @@ describe('AccountPassword', () => {
     expect(response.value).toEqual(leftError.value);
   });
 
-  test('Should return left with InvalidPasswordError if password not contain special character', 
-  () => {
+  test('Should return left with InvalidPasswordError if password not contain special character', () => {
     const response = AccountPassword.create('Any3password');
     const leftError = left(new InvalidPasswordError('Password too weak'));
     expect(response.value).toEqual(leftError.value);
+  });
+
+  test('Should return AccounPassword created if password pass validations', () => {
+    const response = AccountPassword.create('Valid@Password1');
+    expect(response.value).toEqual({ password: 'Valid@Password1' });
   });
 });
