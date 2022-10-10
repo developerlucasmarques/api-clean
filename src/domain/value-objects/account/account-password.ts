@@ -28,5 +28,7 @@ export class AccountPassword {
     if (!validatorPasswordRegex.test(password)) {
       return left(new InvalidPasswordError('Password too weak'));
     }
+
+    return rigth(new AccountPassword(password));
   }
 }
