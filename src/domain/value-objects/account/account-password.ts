@@ -18,7 +18,7 @@ export class AccountPassword {
     }
 
     const validatorPasswordRegex =
-      /((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/;
     if (!validatorPasswordRegex.test(password)) {
       return left(new InvalidPasswordError('Password too weak'));
     }
