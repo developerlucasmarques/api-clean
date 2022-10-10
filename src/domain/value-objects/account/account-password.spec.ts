@@ -9,8 +9,8 @@ describe('AccountPassword', () => {
     expect(response.value).toEqual(leftError.value);
   });
 
-  test('Should return left with InvalidPasswordError if password is weak', () => {
-    const response = AccountPassword.create('any_password');
+  test('Should return left with InvalidPasswordError if password not contain capital letter', () => {
+    const response = AccountPassword.create('any@password3');
     const leftError = left(new InvalidPasswordError('Password too weak'));
     expect(response.value).toEqual(leftError.value);
   });
