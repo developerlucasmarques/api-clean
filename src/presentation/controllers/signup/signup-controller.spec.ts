@@ -1,9 +1,10 @@
 import { DbAddAccountResponse } from '../../../data/usecases/add-account/db-add-account-response';
+import { InvalidEmailError } from '../../../domain/errors/invalid-email';
 import {
   Authentication,
   AuthenticationModel,
 } from '../../../domain/usecases/authentication';
-import { rigth } from '../../../shared/either/either';
+import { left, rigth } from '../../../shared/either/either';
 import { MissingParamError, ServerError } from '../../erros';
 import { badRequest, created, serverError } from '../../helpers/http/http-helper';
 import { SignUpController } from './signup-controller';
@@ -46,8 +47,8 @@ const makeFakeRequest = (): HttpRequest => ({
   body: {
     name: 'any_name',
     email: 'any_email@mail.com',
-    password: 'any_password',
-    passwordConfirmation: 'any_password',
+    password: 'Valid@password123',
+    passwordConfirmation: 'Valid@password123',
   },
 });
 
@@ -88,7 +89,7 @@ describe('SignUp Controller', () => {
     expect(addSpy).toHaveBeenCalledWith({
       name: 'any_name',
       email: 'any_email@mail.com',
-      password: 'any_password',
+      password: 'Valid@password123',
     });
   });
 
@@ -101,6 +102,16 @@ describe('SignUp Controller', () => {
     const httpResponse = await sut.handle(makeFakeRequest());
 
     expect(httpResponse).toEqual(serverError(new ServerError('stack_error')));
+  });
+
+  test('Should return 400 if AddAccount return left error', async () => {
+    const { sut, addAccountStub } = makeSut();
+    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(async () => {
+      return Promise.resolve(left(new InvalidEmailError('Email Invalid')));
+    });
+
+    const response = await sut.handle(makeFakeRequest());
+    expect(response).toEqual(badRequest(new InvalidEmailError('Email Invalid')));
   });
 
   test('Should return 201 if valid data is provided', async () => {
@@ -136,7 +147,7 @@ describe('SignUp Controller', () => {
     await sut.handle(makeFakeRequest());
     expect(authSpy).toHaveBeenCalledWith({
       email: 'any_email@mail.com',
-      password: 'any_password',
+      password: 'Valid@password123',
     });
   });
 
