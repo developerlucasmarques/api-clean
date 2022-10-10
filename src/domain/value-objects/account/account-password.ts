@@ -16,5 +16,11 @@ export class AccountPassword {
     if (!password) {
       return left(new InvalidPasswordError('Password not informed'));
     }
+
+    const validatorPasswordRegex =
+      /((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
+    if (!validatorPasswordRegex.test(password)) {
+      return left(new InvalidPasswordError('Password too weak'));
+    }
   }
 }
