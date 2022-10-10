@@ -17,6 +17,12 @@ export class AccountPassword {
       return left(new InvalidPasswordError('Password not informed'));
     }
 
+    if (password.length < 8) {
+      return left(
+        new InvalidPasswordError('Password must contain at least 8 characters')
+      );
+    }
+
     const validatorPasswordRegex =
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/;
     if (!validatorPasswordRegex.test(password)) {
