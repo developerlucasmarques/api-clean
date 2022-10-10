@@ -17,6 +17,22 @@ describe('AccountName', () => {
     expect(response.value).toEqual(leftError.value);
   });
 
+  test('Should return left with InvalidNameError if name contains more than 100 characters', () => {
+    const response = AccountName.create(
+      'any_name_any_name_any_name_any_name_any_name_any_name_any_name_any_name_any_name_any_name_any_name_AA'
+    );
+    const leftError = left(
+      new InvalidNameError(`Account name must contain between 2 and 100 characters`)
+    );
+    expect(response.value).toEqual(leftError.value);
+  });
+
+  test('Should return left with InvalidNameError if name contains number', () => {
+    const response = AccountName.create('invalid2 name');
+    const leftError = left(new InvalidNameError(`Account name must not contain numbers`));
+    expect(response.value).toEqual(leftError.value);
+  });
+
   test('Should return left with InvalidNameError if name contains number', () => {
     const response = AccountName.create('invalid2 name');
     const leftError = left(new InvalidNameError(`Account name must not contain numbers`));
