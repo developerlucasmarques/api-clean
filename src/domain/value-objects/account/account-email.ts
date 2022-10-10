@@ -18,6 +18,10 @@ export class AccountEmail {
     }
     email = email.trim();
 
+    if (email.length > 100) {
+      return left(new InvalidEmailError(`Email cannot contain more than 100 characters`));
+    }
+
     return rigth(new AccountEmail(email));
   }
 }
