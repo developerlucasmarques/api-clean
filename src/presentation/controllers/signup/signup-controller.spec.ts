@@ -1,7 +1,9 @@
+import { DbAddAccountResponse } from '../../../data/usecases/add-account/db-add-account-response';
 import {
   Authentication,
   AuthenticationModel,
 } from '../../../domain/usecases/authentication';
+import { rigth } from '../../../shared/either/either';
 import { MissingParamError, ServerError } from '../../erros';
 import { badRequest, created, serverError } from '../../helpers/http/http-helper';
 import { SignUpController } from './signup-controller';
@@ -15,8 +17,8 @@ import {
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add(account: AddAccountModel): Promise<AccountModel> {
-      return new Promise((resolve) => resolve(makeFakeAccount()));
+    async add(account: AddAccountModel): Promise<DbAddAccountResponse> {
+      return Promise.resolve(rigth(makeFakeAccount()));
     }
   }
   return new AddAccountStub();
@@ -53,7 +55,7 @@ const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
   name: 'valid_name',
   email: 'valid_email@mail.com',
-  password: 'valid_password',
+  password: 'Valid@password123',
 });
 
 interface SutTypes {

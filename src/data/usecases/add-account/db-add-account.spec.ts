@@ -26,13 +26,13 @@ const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
   name: 'valid_name',
   email: 'valid_email@mail.com',
-  password: 'valid_password',
+  password: 'Valid@password123',
 });
 
 const makeFakeAccountData = (): AddAccountModel => ({
   name: 'valid_name',
   email: 'valid_email@mail.com',
-  password: 'valid_password',
+  password: 'Valid@password123',
 });
 
 interface SutTypes {
@@ -59,7 +59,7 @@ describe('DbAddAccount Usecase', () => {
     const hashSpy = jest.spyOn(hasherStub, 'hash');
 
     await sut.add(makeFakeAccountData());
-    expect(hashSpy).toHaveBeenCalledWith('valid_password');
+    expect(hashSpy).toHaveBeenCalledWith('Valid@password123');
   });
 
   test('Should throw if Hasher throws', async () => {
@@ -67,9 +67,7 @@ describe('DbAddAccount Usecase', () => {
 
     jest
       .spyOn(hasherStub, 'hash')
-      .mockReturnValueOnce(
-        new Promise((resolve, reject) => reject(new Error()))
-      );
+      .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 
     const promise = sut.add(makeFakeAccountData());
 
@@ -94,9 +92,7 @@ describe('DbAddAccount Usecase', () => {
 
     jest
       .spyOn(addAccountRepositoryStub, 'add')
-      .mockReturnValueOnce(
-        new Promise((resolve, reject) => reject(new Error()))
-      );
+      .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 
     const promise = sut.add(makeFakeAccountData());
 
@@ -107,6 +103,6 @@ describe('DbAddAccount Usecase', () => {
     const { sut } = makeSut();
 
     const account = await sut.add(makeFakeAccountData());
-    expect(account).toEqual(makeFakeAccount());
+    expect(account.value).toEqual(makeFakeAccount());
   });
 });

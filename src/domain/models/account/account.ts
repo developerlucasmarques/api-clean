@@ -8,11 +8,6 @@ import { AccountName } from '../../value-objects/account/account-name';
 import { AccountPassword } from '../../value-objects/account/account-password';
 import { UserDataProps } from './user-data-props';
 
-type AccountResponse = Either<
-  InvalidNameError | InvalidEmailError | InvalidPasswordError,
-  Account
->;
-
 export class Account {
   name: AccountName;
   email: AccountEmail;
@@ -25,7 +20,9 @@ export class Account {
     Object.freeze(this);
   }
 
-  public static create(addAccountModel: AddAccountModel): AccountResponse {
+  public static create(
+    addAccountModel: AddAccountModel
+  ): Either<InvalidNameError | InvalidEmailError | InvalidPasswordError, Account> {
     const nameOrError = AccountName.create(addAccountModel.name);
     const emailOrError = AccountEmail.create(addAccountModel.email);
     const passwordOrError = AccountPassword.create(addAccountModel.password);

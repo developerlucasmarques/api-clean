@@ -1,4 +1,4 @@
-import { AccountModel } from '../models/account/account-model';
+import { DbAddAccountResponse } from '../../data/usecases/add-account/db-add-account-response';
 
 export interface AddAccountModel {
   name: string;
@@ -7,5 +7,5 @@ export interface AddAccountModel {
 }
 
 export interface AddAccount {
-  add(account: AddAccountModel): Promise<AccountModel>;
+  add(account: AddAccountModel): Promise<DbAddAccountResponse>;
 }
