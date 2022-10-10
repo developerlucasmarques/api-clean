@@ -14,4 +14,10 @@ describe('AccountPassword', () => {
     const leftError = left(new InvalidPasswordError('Password too weak'));
     expect(response.value).toEqual(leftError.value);
   });
+
+  test('Should return left with InvalidPasswordError if password not contain numbers', () => {
+    const response = AccountPassword.create('Any@password');
+    const leftError = left(new InvalidPasswordError('Password too weak'));
+    expect(response.value).toEqual(leftError.value);
+  });
 });
