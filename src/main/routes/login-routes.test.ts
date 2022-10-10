@@ -26,8 +26,8 @@ describe('Login Routes', () => {
         .send({
           name: 'Lucas',
           email: 'lucas@mail.com',
-          password: '123',
-          passwordConfirmation: '123',
+          password: 'Valid@Password123',
+          passwordConfirmation: 'Valid@Password123',
         })
         .expect(201);
     });
@@ -35,7 +35,7 @@ describe('Login Routes', () => {
 
   describe('POST /login', () => {
     test('Should return 200 on login', async () => {
-      const password = await hash('123', 12);
+      const password = await hash('Valid@Password123', 12);
       await accountColletion.insertOne({
         name: 'Lucas',
         email: 'lucas@mail.com',
@@ -46,7 +46,7 @@ describe('Login Routes', () => {
         .post('/api/login')
         .send({
           email: 'lucas@mail.com',
-          password: '123',
+          password: 'Valid@Password123',
         })
         .expect(200);
     });
@@ -56,7 +56,7 @@ describe('Login Routes', () => {
         .post('/api/login')
         .send({
           email: 'lucas@mail.com',
-          password: '123',
+          password: 'Valid@Password123',
         })
         .expect(401);
     });
