@@ -1,4 +1,4 @@
-import { Either, left, rigth } from '../../either/either';
+import { Either, left, rigth } from '../../../shared/either/either';
 import { InvalidPasswordError } from '../../errors/invalid-password';
 
 type AccountPasswordResponse = Either<InvalidPasswordError, AccountPassword>;

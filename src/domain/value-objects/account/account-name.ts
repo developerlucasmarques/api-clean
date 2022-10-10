@@ -1,4 +1,4 @@
-import { Either, left, rigth } from '../../either/either';
+import { Either, left, rigth } from '../../../shared/either/either';
 import { InvalidNameError } from '../../errors/invalid-name';
 
 type AccountNameResponse = Either<InvalidNameError, AccountName>;

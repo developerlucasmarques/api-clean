@@ -1,4 +1,4 @@
-import { left } from '../../either/either';
+import { left } from '../../../shared/either/either';
 import { InvalidEmailError } from '../../errors/invalid-email';
 import { AccountEmail } from './account-email';
 

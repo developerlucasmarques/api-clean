@@ -1,4 +1,4 @@
-import { left } from '../../either/either';
+import { left } from '../../../shared/either/either';
 import { InvalidPasswordError } from '../../errors/invalid-password';
 import { AccountPassword } from './account-password';
 

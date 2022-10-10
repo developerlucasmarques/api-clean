@@ -1,4 +1,4 @@
-import { Either, left, rigth } from '../../either/either';
+import { Either, left, rigth } from '../../../shared/either/either';
 import { InvalidEmailError } from '../../errors/invalid-email';
 
 type AccountEmailResponse = Either<InvalidEmailError, AccountEmail>;

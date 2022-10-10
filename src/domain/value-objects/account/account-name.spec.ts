@@ -1,4 +1,4 @@
-import { left } from '../../either/either';
+import { left } from '../../../shared/either/either';
 import { InvalidNameError } from '../../errors/invalid-name';
 import { AccountName } from './account-name';
 
