@@ -1,7 +1,7 @@
 import { Either, left, rigth } from '../../../shared/either/either';
 import { InvalidPasswordError } from '../../errors/invalid-password';
 
-type AccountPasswordResponse = Either<InvalidPasswordError, AccountPassword>;
+export type AccountPasswordResponse = Either<InvalidPasswordError, AccountPassword>;
 
 export class AccountPassword {
   private constructor(private readonly password: string) {

@@ -1,7 +1,7 @@
 import { Either, left, rigth } from '../../../shared/either/either';
 import { InvalidEmailError } from '../../errors/invalid-email';
 
-type AccountEmailResponse = Either<InvalidEmailError, AccountEmail>;
+export type AccountEmailResponse = Either<InvalidEmailError, AccountEmail>;
 
 export class AccountEmail {
   private constructor(private readonly email: string) {

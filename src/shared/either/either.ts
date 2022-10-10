@@ -29,3 +29,18 @@ export const left = <L, R>(l: L): Either<L, R> => {
 export const rigth = <L, R>(r: R): Either<L, R> => {
   return new Rigth<L, R>(r);
 };
+
+export class EitherCombine<L, R> {
+  private constructor(public readonly combines: Either<L, R>[]) {
+    Object.freeze(this);
+  }
+
+  public static validate<L, R>(eithers: Either<L, R>[]): Either<any, any> {
+    for (const either of eithers) {
+      if (either.isLeft()) {
+        return either;
+      }
+    }
+    return rigth(new EitherCombine(eithers));
+  }
+}

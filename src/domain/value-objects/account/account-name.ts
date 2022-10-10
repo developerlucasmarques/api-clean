@@ -1,7 +1,7 @@
 import { Either, left, rigth } from '../../../shared/either/either';
 import { InvalidNameError } from '../../errors/invalid-name';
 
-type AccountNameResponse = Either<InvalidNameError, AccountName>;
+export type AccountNameResponse = Either<InvalidNameError, AccountName>;
 
 export class AccountName {
   private constructor(private readonly name: string) {
