@@ -28,4 +28,11 @@ describe('AccountPassword', () => {
     const leftError = left(new InvalidPasswordError('Password too weak'));
     expect(response.value).toEqual(leftError.value);
   });
+
+  test('Should return left with InvalidPasswordError if password not contain special character', 
+  () => {
+    const response = AccountPassword.create('Any3password');
+    const leftError = left(new InvalidPasswordError('Password too weak'));
+    expect(response.value).toEqual(leftError.value);
+  });
 });
