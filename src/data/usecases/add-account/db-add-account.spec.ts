@@ -3,6 +3,8 @@ import { AddAccountModel } from '../../../domain/usecases/add-account';
 import { AddAccountRepository } from '../../protocols/db/account/add-account-repository';
 import { Hasher } from '../../protocols/criptography/hasher';
 import { DbAddAccount } from './db-add-account';
+import { left } from '../../../shared/either/either';
+import { InvalidEmailError } from '../../../domain/errors/invalid-email';
 
 const makeHasher = (): Hasher => {
   class HasherStub implements Hasher {
@@ -44,7 +46,6 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const hasherStub = makeHasher();
   const addAccountRepositoryStub = makeAddAccountRepository();
-
   const sut = new DbAddAccount(hasherStub, addAccountRepositoryStub);
   return {
     sut,
@@ -54,6 +55,18 @@ const makeSut = (): SutTypes => {
 };
 
 describe('DbAddAccount Usecase', () => {
+  test('Should return first error if Account create return error', async () => {
+    const { sut } = makeSut();
+    const account = await sut.add({
+      name: 'any_name',
+      email: '',
+      password: 'any_password',
+    });
+
+    const leftError = left(new InvalidEmailError(`Email not informed`));
+    expect(account.value).toEqual(leftError.value);
+  });
+
   test('Should call Hasher with correct password', async () => {
     const { sut, hasherStub } = makeSut();
     const hashSpy = jest.spyOn(hasherStub, 'hash');
