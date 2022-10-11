@@ -1,11 +1,12 @@
+import { left, rigth } from '../../../shared/either/either';
 import { MissingParamError } from '../../erros';
-import { Validation } from '../../protocols/validation';
+import { Validation, ValidationResponse } from '../../protocols/validation';
 import { ValidationComposite } from './validation-composite';
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
-    validate(input: any): Error | null {
-      return null;
+    validate(input: any): ValidationResponse {
+      return rigth(null);
     }
   }
   return new ValidationStub();
@@ -30,27 +31,27 @@ describe('Validation Composite', () => {
     const { sut, validationStubs } = makeSut();
     jest
       .spyOn(validationStubs[0], 'validate')
-      .mockReturnValueOnce(new MissingParamError('field'));
+      .mockReturnValueOnce(left(new MissingParamError('field')));
 
     const error = sut.validate({ field: 'any_value' });
-    expect(error).toEqual(new MissingParamError('field'));
+    expect(error.value).toEqual(new MissingParamError('field'));
   });
 
   test('Should return the firs error if more then one validation fails ', () => {
     const { sut, validationStubs } = makeSut();
-    jest.spyOn(validationStubs[0], 'validate').mockReturnValueOnce(new Error());
+    jest.spyOn(validationStubs[0], 'validate').mockReturnValueOnce(left(new Error()));
 
     jest
       .spyOn(validationStubs[1], 'validate')
-      .mockReturnValueOnce(new MissingParamError('field'));
+      .mockReturnValueOnce(left(new MissingParamError('field')));
 
     const error = sut.validate({ field: 'any_value' });
-    expect(error).toEqual(new Error());
+    expect(error.value).toEqual(new Error());
   });
 
-  test('Should not return if validation succeeds ', () => {
+  test('Should not return if validation succeeds', () => {
     const { sut } = makeSut();
     const error = sut.validate({ field: 'any_value' });
-    expect(error).toBeFalsy();
+    expect(error.value).toBeFalsy();
   });
 });

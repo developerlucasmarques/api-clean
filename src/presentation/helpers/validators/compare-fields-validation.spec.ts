@@ -12,7 +12,7 @@ describe('Compare Fields Validation', () => {
       field: 'any_value',
       fieldToCompare: 'wrong_value',
     });
-    expect(error).toEqual(new InvalidParamError('fieldToCompare'));
+    expect(error.value).toEqual(new InvalidParamError('fieldToCompare'));
   });
 
   test('Should not return a if validation succeeds', () => {
@@ -21,6 +21,6 @@ describe('Compare Fields Validation', () => {
       field: 'any_value',
       fieldToCompare: 'any_value',
     });
-    expect(error).toBeFalsy();
+    expect(error.value).toBeFalsy();
   });
 });

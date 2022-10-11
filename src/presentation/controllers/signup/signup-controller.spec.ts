@@ -14,6 +14,7 @@ import {
   AddAccountModel,
   HttpRequest,
   Validation,
+  ValidationResponse,
 } from './signup-controller-protocols';
 
 const makeAddAccount = (): AddAccount => {
@@ -27,8 +28,8 @@ const makeAddAccount = (): AddAccount => {
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
-    validate(input: any): Error | null {
-      return null;
+    validate(input: any): ValidationResponse {
+      return rigth(null);
     }
   }
   return new ValidationStub();
@@ -134,7 +135,7 @@ describe('SignUp Controller', () => {
     const { sut, validationStub } = makeSut();
     jest
       .spyOn(validationStub, 'validate')
-      .mockReturnValueOnce(new MissingParamError('any_field'));
+      .mockReturnValueOnce(left(new MissingParamError('any_field')));
 
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')));

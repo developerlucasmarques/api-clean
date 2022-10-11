@@ -2,6 +2,7 @@ import {
   Authentication,
   AuthenticationModel,
 } from '../../../domain/usecases/authentication';
+import { left, rigth } from '../../../shared/either/either';
 import { MissingParamError } from '../../erros';
 import {
   badRequest,
@@ -9,13 +10,13 @@ import {
   serverError,
   unauthorized,
 } from '../../helpers/http/http-helper';
-import { HttpRequest, Validation } from '../signup/signup-controller-protocols';
+import { HttpRequest, Validation, ValidationResponse } from '../signup/signup-controller-protocols';
 import { LoginController } from './login-controller';
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
-    validate(input: any): Error | null {
-      return null;
+    validate(input: any): ValidationResponse {
+      return rigth(null);
     }
   }
   return new ValidationStub();
@@ -99,7 +100,7 @@ describe('Login Controller', () => {
     const { sut, validationStub } = makeSut();
     jest
       .spyOn(validationStub, 'validate')
-      .mockReturnValueOnce(new MissingParamError('any_field'));
+      .mockReturnValueOnce(left(new MissingParamError('any_field')));
 
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(

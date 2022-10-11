@@ -1,5 +1,6 @@
+import { left, rigth } from '../../../shared/either/either';
 import { InvalidParamError } from '../../erros';
-import { Validation } from '../../protocols/validation';
+import { Validation, ValidationResponse } from '../../protocols/validation';
 
 export class CompareFieldsValidation implements Validation {
   constructor(
@@ -7,9 +8,10 @@ export class CompareFieldsValidation implements Validation {
     private readonly fieldToCompareName: string
   ) {}
 
-  validate(input: any): Error | null {
+  validate(input: any): ValidationResponse {
     if (input[this.fieldName] !== input[this.fieldToCompareName]) {
-      return new InvalidParamError(this.fieldToCompareName);
+      return left(new InvalidParamError(this.fieldToCompareName));
     }
+    return rigth(null);
   }
 }

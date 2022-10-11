@@ -1,5 +1,4 @@
 import { Authentication } from '../../../domain/usecases/authentication';
-import { InvalidParamError } from '../../erros';
 import { badRequest, created, serverError } from '../../helpers/http/http-helper';
 import {
   AddAccount,
@@ -19,9 +18,10 @@ export class SignUpController implements Controller {
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const error = this.validation.validate(httpRequest.body);
-      if (error) {
-        return badRequest(error);
+      if (error.isLeft()) {
+        return badRequest(error.value);
       }
+
       const { name, email, password } = httpRequest.body;
       const account = await this.addAccount.add({
         name,

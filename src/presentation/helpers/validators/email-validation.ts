@@ -1,6 +1,7 @@
+import { left, rigth } from '../../../shared/either/either';
 import { InvalidParamError } from '../../erros';
 import { EmailValidator } from '../../protocols/email-validator';
-import { Validation } from '../../protocols/validation';
+import { Validation, ValidationResponse } from '../../protocols/validation';
 
 export class EmailValidation implements Validation {
   constructor(
@@ -8,10 +9,12 @@ export class EmailValidation implements Validation {
     private readonly emailValidator: EmailValidator
   ) {}
 
-  validate(input: any): Error | null {
+  validate(input: any): ValidationResponse {
     const isValid = this.emailValidator.isValid(input[this.fieldName]);
     if (!isValid) {
-      return new InvalidParamError(this.fieldName);
+      return left(new InvalidParamError(this.fieldName));
     }
+    return rigth(null)
+
   }
 }
