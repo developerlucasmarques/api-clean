@@ -17,27 +17,27 @@ export class SignUpController implements Controller {
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const error = this.validation.validate(httpRequest.body);
-      if (error.isLeft()) {
-        return badRequest(error.value);
+      const errorOrNull = this.validation.validate(httpRequest.body);
+      if (errorOrNull.isLeft()) {
+        return badRequest(errorOrNull.value);
       }
 
       const { name, email, password } = httpRequest.body;
-      const account = await this.addAccount.add({
+      const accountOrError = await this.addAccount.add({
         name,
         email,
         password,
       });
 
-      if (account.isLeft()) {
-        return badRequest(account.value);
+      if (accountOrError.isLeft()) {
+        return badRequest(accountOrError.value);
       }
 
-      const accessToken = await this.authentication.auth({
+      const accessTokenOrError = await this.authentication.auth({
         email,
         password,
       });
-      return created({ accessToken: accessToken.value });
+      return created({ accessToken: accessTokenOrError.value });
     } catch (error) {
       return serverError(error);
     }
