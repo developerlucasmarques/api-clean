@@ -5,6 +5,8 @@ import { Encrypter } from '../../protocols/criptography/encrypter';
 import { LoadAccountByEmailRepository } from '../../protocols/db/account/load-account-by-email-repository';
 import { UpdateAccessTokenRepository } from '../../protocols/db/account/update-access-token-repository';
 import { DbAuthentication } from './db-authentication';
+import { AccountNotFoundDbError } from '../../../infra/errors/account-not-found-db-error';
+import { Either, rigth } from '../../../shared/either/either';
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'any_id',
@@ -20,8 +22,10 @@ const makeFakeAuthentication = (): AuthenticationModel => ({
 
 const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-    async loadByEmail(email: string): Promise<AccountModel> {
-      return Promise.resolve(makeFakeAccount());
+    async loadByEmail(
+      email: string
+    ): Promise<Either<AccountNotFoundDbError, AccountModel>> {
+      return rigth(makeFakeAccount());
     }
   }
   return new LoadAccountByEmailRepositoryStub();

@@ -4,6 +4,8 @@ import { LoadAccountByEmailRepository } from '../../../../data/protocols/db/acco
 import { UpdateAccessTokenRepository } from '../../../../data/protocols/db/account/update-access-token-repository';
 import { AccountModel } from '../../../../domain/models/account/account-model';
 import { AddAccountModel } from '../../../../domain/usecases/add-account';
+import { Either, left, rigth } from '../../../../shared/either/either';
+import { AccountNotFoundDbError } from '../../../errors/account-not-found-db-error';
 import { MongoHelper } from '../helpers/mongo-helper';
 
 export class AccountMongoRepository
@@ -21,12 +23,15 @@ export class AccountMongoRepository
     return account;
   }
 
-  async loadByEmail(email: string): Promise<AccountModel> {
+  async loadByEmail(
+    email: string
+  ): Promise<Either<AccountNotFoundDbError, AccountModel>> {
     const accountCollection = await MongoHelper.getCollection('accounts');
     let account = await accountCollection.findOne({ email });
-    if (account) {
-      return MongoHelper.map(account);
+    if (!account) {
+      return left(new AccountNotFoundDbError(`Account with email: '${email}' not found`));
     }
+    return rigth(MongoHelper.map(account));
   }
 
   async updateAccessToken(id: string, token: string): Promise<void> {
