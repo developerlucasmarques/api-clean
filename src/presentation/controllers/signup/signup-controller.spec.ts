@@ -1,4 +1,5 @@
 import { DbAddAccountResponse } from '../../../data/usecases/add-account/db-add-account-response';
+import { DbAuthenticationResponse } from '../../../data/usecases/authentication/db-authentication-response';
 import { InvalidEmailError } from '../../../domain/errors/invalid-email';
 import {
   Authentication,
@@ -37,8 +38,8 @@ const makeValidation = (): Validation => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth(authentication: AuthenticationModel): Promise<string> {
-      return new Promise((resolve) => resolve('any_token'));
+    async auth(authentication: AuthenticationModel): DbAuthenticationResponse {
+      return new Promise((resolve) => resolve(rigth('any_token')));
     }
   }
   return new AuthenticationStub();

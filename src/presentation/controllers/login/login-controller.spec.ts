@@ -10,8 +10,14 @@ import {
   serverError,
   unauthorized,
 } from '../../helpers/http/http-helper';
-import { HttpRequest, Validation, ValidationResponse } from '../signup/signup-controller-protocols';
+import {
+  HttpRequest,
+  Validation,
+  ValidationResponse,
+} from '../signup/signup-controller-protocols';
 import { LoginController } from './login-controller';
+import { DbAuthenticationResponse } from '../../../data/usecases/authentication/db-authentication-response';
+import { DbAuthenticationError } from '../../../data/usecases/errors/db-authentication-error';
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
@@ -24,8 +30,8 @@ const makeValidation = (): Validation => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth(authentication: AuthenticationModel): Promise<string> {
-      return new Promise((resolve) => resolve('any_token'));
+    async auth(authentication: AuthenticationModel): DbAuthenticationResponse {
+      return new Promise((resolve) => resolve(rigth('any_token')));
     }
   }
   return new AuthenticationStub();
@@ -65,7 +71,7 @@ describe('Login Controller', () => {
     const { sut, authenticationStub } = makeSut();
     jest
       .spyOn(authenticationStub, 'auth')
-      .mockReturnValueOnce(Promise.resolve(''));
+      .mockReturnValueOnce(Promise.resolve(left(new DbAuthenticationError('Authentication error'))));
 
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(unauthorized());
@@ -103,8 +109,6 @@ describe('Login Controller', () => {
       .mockReturnValueOnce(left(new MissingParamError('any_field')));
 
     const httpResponse = await sut.handle(makeFakeRequest());
-    expect(httpResponse).toEqual(
-      badRequest(new MissingParamError('any_field'))
-    );
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')));
   });
 });

@@ -1,12 +1,14 @@
-import { AccountModel } from '../../../domain/models/account/account-model';
 import {
   Authentication,
   AuthenticationModel,
 } from '../../../domain/usecases/authentication';
-import { HashComparer } from '../../protocols/criptography/hash-comparer';
+import { left, rigth } from '../../../shared/either/either';
 import { Encrypter } from '../../protocols/criptography/encrypter';
+import { HashComparer } from '../../protocols/criptography/hash-comparer';
 import { LoadAccountByEmailRepository } from '../../protocols/db/account/load-account-by-email-repository';
 import { UpdateAccessTokenRepository } from '../../protocols/db/account/update-access-token-repository';
+import { DbAuthenticationError } from '../errors/db-authentication-error';
+import { DbAuthenticationResponse } from './db-authentication-response';
 
 export class DbAuthentication implements Authentication {
   constructor(
@@ -16,7 +18,7 @@ export class DbAuthentication implements Authentication {
     private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
   ) {}
 
-  async auth(authentication: AuthenticationModel): Promise<string> {
+  async auth(authentication: AuthenticationModel): DbAuthenticationResponse {
     const { password, email } = authentication;
     const account = await this.loadAccountByEmailRepository.loadByEmail(email);
     if (account.isRigth()) {
@@ -27,9 +29,11 @@ export class DbAuthentication implements Authentication {
           account.value.id,
           accessToken
         );
-        return accessToken;
+        return rigth(accessToken);
       }
+      return left(new DbAuthenticationError('Authentication error'));
+    } else {
+      return left(account.value);
     }
-    return null;
   }
 }

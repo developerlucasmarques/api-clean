@@ -22,11 +22,11 @@ export class LoginController implements Controller {
       }
 
       const { email, password } = httpRequest.body;
-      const accessToken = await this.authentication.auth({ email, password });
-      if (!accessToken) {
+      const accessTokenOrError = await this.authentication.auth({ email, password });
+      if (accessTokenOrError.isLeft()) {
         return unauthorized();
       }
-      return ok({ accessToken });
+      return ok({ accessToken: accessTokenOrError.value });
     } catch (error) {
       return serverError(error);
     }

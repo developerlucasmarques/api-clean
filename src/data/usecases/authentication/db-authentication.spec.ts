@@ -7,6 +7,7 @@ import { UpdateAccessTokenRepository } from '../../protocols/db/account/update-a
 import { DbAuthentication } from './db-authentication';
 import { AccountNotFoundDbError } from '../../../infra/errors/account-not-found-db-error';
 import { Either, left, rigth } from '../../../shared/either/either';
+import { DbAuthenticationError } from '../errors/db-authentication-error';
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'any_id',
@@ -94,14 +95,17 @@ describe('DbAuthentication UseCase', () => {
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com');
   });
 
-  test('Should return Error if LoadAccountByEmailRepository returns null', async () => {
+  test('Should return Error if LoadAccountByEmailRepository returns Error', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut();
     jest
       .spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
-      .mockReturnValueOnce(Promise.resolve(left(new Error('Email not found'))));
+      .mockReturnValueOnce(
+        Promise.resolve(left(new AccountNotFoundDbError('Email not found')))
+      );
 
-    const accessToken = await sut.auth(makeFakeAuthentication());
-    expect(accessToken).toBeNull();
+    const accessTokenOrError = await sut.auth(makeFakeAuthentication());
+    const leftError = left(new Error('Email not found'));
+    expect(accessTokenOrError.value).toEqual(leftError.value);
   });
 
   test('Should throw if LoadAccountByEmailRepository throws', async () => {
@@ -131,12 +135,13 @@ describe('DbAuthentication UseCase', () => {
     await expect(promise).rejects.toThrow();
   });
 
-  test('Should return null if HashComparer returns false', async () => {
+  test('Should return DbAuthenticationError if HashComparer returns false', async () => {
     const { sut, hashComparerStub } = makeSut();
     jest.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(Promise.resolve(false));
 
     const accessToken = await sut.auth(makeFakeAuthentication());
-    expect(accessToken).toBeNull();
+    const leftError = left(new DbAuthenticationError('Authentication error'));
+    expect(accessToken.value).toEqual(leftError.value);
   });
 
   test('Should call Encrypter with correct id', async () => {
@@ -157,7 +162,7 @@ describe('DbAuthentication UseCase', () => {
   test('Should return a token on success', async () => {
     const { sut } = makeSut();
     const accessToken = await sut.auth(makeFakeAuthentication());
-    expect(accessToken).toBe('access_token');
+    expect(accessToken.value).toBe('access_token');
   });
 
   test('Should call UpdateAceesTokenRepository with correct values', async () => {

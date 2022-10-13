@@ -37,7 +37,7 @@ export class SignUpController implements Controller {
         email,
         password,
       });
-      return created({ accessToken });
+      return created({ accessToken: accessToken.value });
     } catch (error) {
       return serverError(error);
     }

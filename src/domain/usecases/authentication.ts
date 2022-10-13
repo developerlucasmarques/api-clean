@@ -1,8 +1,10 @@
+import { Either } from '../../shared/either/either';
+
 export interface AuthenticationModel {
   email: string;
   password: string;
 }
 
 export interface Authentication {
-  auth(authentication: AuthenticationModel): Promise<string>;
+  auth(authentication: AuthenticationModel): Promise<Either<Error, string>>;
 }
