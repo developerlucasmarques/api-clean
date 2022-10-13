@@ -94,13 +94,11 @@ describe('DbAuthentication UseCase', () => {
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com');
   });
 
-  test('Should return AccountNotFoundDbError if LoadAccountByEmailRepository returns null', async () => {
+  test('Should return Error if LoadAccountByEmailRepository returns null', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut();
     jest
       .spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
-      .mockReturnValueOnce(
-        Promise.resolve(left(new AccountNotFoundDbError('Email not found')))
-      );
+      .mockReturnValueOnce(Promise.resolve(left(new Error('Email not found'))));
 
     const accessToken = await sut.auth(makeFakeAuthentication());
     expect(accessToken).toBeNull();

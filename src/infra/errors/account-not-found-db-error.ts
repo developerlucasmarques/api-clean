@@ -1,6 +1,4 @@
-import { InfraError } from './infra-errors';
-
-export class AccountNotFoundDbError extends Error implements InfraError {
+export class AccountNotFoundDbError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'AccountNotFoundDbError';
