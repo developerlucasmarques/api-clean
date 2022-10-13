@@ -6,7 +6,7 @@ import { LoadAccountByEmailRepository } from '../../protocols/db/account/load-ac
 import { UpdateAccessTokenRepository } from '../../protocols/db/account/update-access-token-repository';
 import { DbAuthentication } from './db-authentication';
 import { AccountNotFoundDbError } from '../../../infra/errors/account-not-found-db-error';
-import { Either, rigth } from '../../../shared/either/either';
+import { Either, left, rigth } from '../../../shared/either/either';
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'any_id',
@@ -94,12 +94,17 @@ describe('DbAuthentication UseCase', () => {
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com');
   });
 
-  // test('Should return null if LoadAccountByEmailRepository returns null', async () => {
-  //   const { sut, loadAccountByEmailRepositoryStub } = makeSut();
-  //   jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce('');
-  //   const accessToken = await sut.auth(makeFakeAuthentication());
-  //   expect(accessToken).toBeNull();
-  // });
+  test('Should return AccountNotFoundDbError if LoadAccountByEmailRepository returns null', async () => {
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut();
+    jest
+      .spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
+      .mockReturnValueOnce(
+        Promise.resolve(left(new AccountNotFoundDbError('Email not found')))
+      );
+
+    const accessToken = await sut.auth(makeFakeAuthentication());
+    expect(accessToken).toBeNull();
+  });
 
   test('Should throw if LoadAccountByEmailRepository throws', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut();
